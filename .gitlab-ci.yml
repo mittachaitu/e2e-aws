@@ -9,6 +9,7 @@ stages:
   - NODE-MAINTENANCE-DRAIN
   - NODE-LOSS-EVICT
   - STORAGE-POOL-FAILURE
+  - NODE-REPLACEMENT
   - CLUSTER-CLEANUP
 
 variables: 
@@ -105,6 +106,14 @@ storage-pool-failure 1:2:
    - ./script/apps/percona/liveness/percona-app-liveness-cstor
   script:
    - ./script/chaos/cstor-pool-pod-kill
+
+node-replacement-via-node-termination:
+  stage: NODE-REPLACEMENT
+  extends: .chaos_test_template #dependencies: percona-cstor
+  before_script:
+   - ./script/apps/percona/liveness/percona-app-liveness-cstor
+  script:
+   - ./script/chaos/node-termination
 
 cleanup-aws:
   when: always
